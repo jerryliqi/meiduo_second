@@ -27,8 +27,8 @@ SECRET_KEY = '-9_e#z#heqjpp4x#0#%nrd8874l#l7+y55ryaj()ah1s+_@k-^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# 允许哪些hosts访问我的Django(给后端看的)
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'www.meiduo.site', 'api.meiduo.site', '192.168.28.139']
 
 # Application definition
 
@@ -42,12 +42,16 @@ INSTALLED_APPS = [
 
     # DRF模块配置
     'rest_framework',
+    # 解决前后端跨域问题
+    'corsheaders',
 
     # 用户模块
     'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
+    # 解决跨域问题中间键
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -213,3 +217,15 @@ REST_FRAMEWORK = {
 
 # 告知django用户认证使用自定义模型类
 AUTH_USER_MODEL = 'users.User'
+
+# CORS,允许跨域白名单(给cors应用看的)
+CORS_ORIGIN_WHITELIST = (
+    # TODO: 部署的时候需要更换成ngnix域名(id)
+    '127.0.0.1:8080',
+    'localhost:8080',
+    # 增加了域名需要加入白名单,不然又会有跨域问题
+    'www.meiduo.site:8080',
+    'api.meiduo.site:8000',
+    '192.168.28.139:8080',
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
