@@ -21,7 +21,8 @@ def send_sms_code(mobile, sms_code):
     # 利用云通讯第三方平台发送短信
 
     try:
-        result = CCP.send_template_sms(mobile, [sms_code, constants.SMS_CODE_REDIS_EXPIRES // 60], SMS_CODE_TEMP_ID)
+        ccp = CCP()
+        result = ccp.send_template_sms(to=mobile, datas=[sms_code, constants.SMS_CODE_REDIS_EXPIRES // 60], temp_id=SMS_CODE_TEMP_ID)
     except Exception as e:
         logger.error("发送验证码短信[异常][ mobile: %s, message: %s ]" % (mobile, e))
     else:

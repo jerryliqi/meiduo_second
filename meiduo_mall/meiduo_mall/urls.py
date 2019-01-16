@@ -20,6 +20,9 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-    # 用户模块总路由
+    # 发送短信模块总路由
     url(r'^', include('verifications.urls')),
+    # 用户模块总路由
+    url(r'^', include('users.urls')),
+
 ]

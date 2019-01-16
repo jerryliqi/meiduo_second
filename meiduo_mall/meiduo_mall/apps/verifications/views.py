@@ -21,7 +21,6 @@ class SMSCodeView(APIView):
     def get(self, request, mobile):
         # 连接redis数据库, 对应2号仓库
         redis_conn = get_redis_connection("verify_code")
-        pl = redis_conn.pipeline()
         # 每次发送短信验证码之前先判断短信验证码是否过期  GET key
         flag_sms = redis_conn.get("flag_sms_%s" % mobile)
         if flag_sms:
@@ -31,6 +30,7 @@ class SMSCodeView(APIView):
         sms_code = "%06d" % random.randint(0, 999999)
         logger.info(sms_code)
 
+        pl = redis_conn.pipeline()
         # 将生成的短信验证码储存到redis数据库,有效期60秒  SETEX key seconds value
         pl.setex("sms_%s" % mobile, constants.SMS_CODE_REDIS_EXPIRES, sms_code)
         # 储存一个发过短信的标识,以免频繁发送短信

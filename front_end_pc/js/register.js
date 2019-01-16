@@ -23,7 +23,7 @@ var vm = new Vue({
         error_phone_message: ''
     },
     methods: {
-// 检查用户名
+        // 检查用户名
         check_username: function () {
             var len = this.username.length;
             if (len < 5 || len > 20) {
