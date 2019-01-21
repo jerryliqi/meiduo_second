@@ -4,13 +4,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User
-from . import serializers
+from .serializers import CreateUserSerializer
 
 
 # url(r'^users/$', views.CreateAPIView.as_view())
 class UserView(CreateAPIView):
     """用户注册"""
-    serializer_class = serializers.CreateUserSerializer
+    serializer_class = CreateUserSerializer
 
 # url('^usernames/(?P<username>\w{5, 20})/count$', views.UsernameCountView.as_view())
 class UsernameCountView(APIView):

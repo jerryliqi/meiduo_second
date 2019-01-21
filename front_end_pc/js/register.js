@@ -164,7 +164,6 @@ var vm = new Vue({
             this.check_phone();
             this.check_sms_code();
             this.check_allow();
-
             if (this.error_name == false && this.error_password == false && this.error_check_password == false
                 && this.error_phone == false && this.error_sms_code == false && this.error_allow == false) {
                 axios.post(this.host + '/users/', {
@@ -178,6 +177,12 @@ var vm = new Vue({
                     responseType: 'json'
                 })
                     .then(response => {
+                        // 记录⽤户的登录状态
+                        sessionStorage.clear();
+                        localStorage.clear();
+                        localStorage.token = response.data.token;
+                        localStorage.username = response.data.username;
+                        localStorage.user_id = response.data.id;
                         location.href = '/index.html';
                     })
                     .catch(error => {
