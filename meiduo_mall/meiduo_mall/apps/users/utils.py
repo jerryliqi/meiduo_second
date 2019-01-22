@@ -22,7 +22,7 @@ def get_user_by_account(account):
     :return: User对象或者None
     """
     try:
-        if re.match(r'^1[3-9]/d{9}$', account):
+        if re.match(r'^1[3-9]\d{9}$', account):
             # 账户为手机号
             user = User.objects.get(mobile=account)
 

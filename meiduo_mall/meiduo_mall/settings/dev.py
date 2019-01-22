@@ -47,8 +47,12 @@ INSTALLED_APPS = [
     # 解决前后端跨域问题
     'corsheaders',
 
+    # 短信验证码模块
+    'verifications.apps.VerificationsConfig',
     # 用户模块
     'users.apps.UsersConfig',
+    # QQ登录模块
+    'oauth.apps.OauthConfig',
 ]
 
 MIDDLEWARE = [
@@ -242,6 +246,7 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 # JWT_EXPIRATION_DELTA 指明token的有效期
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    # 为JWT登录视图补充返回值
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',
 }
 

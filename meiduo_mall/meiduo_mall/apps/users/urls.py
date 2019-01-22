@@ -12,5 +12,5 @@ urlpatterns = [
     # 用户注册模块
     url(r'^users/$', views.UserView.as_view()),
     # jwt登录
-    url(r'^authorizations/$', obtain_jwt_token)
+    url(r'^authorizations/$', obtain_jwt_token),
 ]
