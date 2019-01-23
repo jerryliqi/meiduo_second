@@ -13,7 +13,8 @@ def generate_save_user_token(openid):
     """
     """对openid进行加密"""
     # 1.创建序列化器
-    serializer = TJSSerializer(settings.SECRET_KEY, constants.QQ_OPENID_ENCRYPTION)
+    # expires_in过期时间
+    serializer = TJSSerializer(secret_key=settings.SECRET_KEY, expires_in=constants.QQ_OPENID_ENCRYPTION)
 
     # 2.构造数据
     data = {
@@ -24,3 +25,16 @@ def generate_save_user_token(openid):
 
     # 4.返回响应数据
     return access_token_bytes.decode()
+
+
+def check_save_user_token(access_token):
+    """解密"""
+    # 1.创建序列化器
+    serializer = TJSSerializer(secret_key=settings.SECRET_KEY, expires_in=constants.QQ_OPENID_ENCRYPTION)
+    # 2.loads进行解密
+    try:
+        data = serializer.loads(access_token)
+    except BadData:
+        return None
+    else:
+        return data.get("openid")

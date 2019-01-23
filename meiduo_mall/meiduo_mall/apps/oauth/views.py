@@ -9,6 +9,8 @@ from rest_framework_jwt.settings import api_settings
 
 from .models import OAuthQQUser
 from .utils import generate_save_user_token
+from .serializers import QQAuthUserSerializer
+
 
 
 
@@ -55,12 +57,38 @@ class QQAuthorUserView(GenericAPIView):
             payload = jwt_payload_handler(user)
             token = jwt_encode_handler(payload)
 
-            response = {
+            response = Response({
                 "token": token,
                 "user_id": user.id,
                 "username": user.username
-            }
+            })
             return response
+
+    def post(self, request):
+
+        # 1.定义序列化器
+        # serializer = self.get_serializer(data=request.data)
+        serializer = QQAuthUserSerializer(data=request.data)
+        # 2.序列化校验
+        # 意味着可以在API中全局复写校验错误响应的格式
+        serializer.is_valid(raise_exception=True)
+        # 3.保存
+        user = serializer.save()
+
+        # 生成JWT token
+        jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+        # 获取oauth_user关联的user
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+
+        response = Response({
+            "user_id": user.id,
+            "username": user.username,
+            "token": token
+        })
+        return response
 
 
 class QQAuthorURLView(APIView):
