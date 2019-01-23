@@ -1,10 +1,20 @@
 from django.shortcuts import render
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 from .models import User
-from .serializers import CreateUserSerializer
+from .serializers import CreateUserSerializer, UserDetailSerializer
+
+
+class UserDetailView(RetrieveAPIView):
+    """用户详情"""
+    serializer_class = UserDetailSerializer
+    pagination_class = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 
 # url(r'^users/$', views.CreateAPIView.as_view())

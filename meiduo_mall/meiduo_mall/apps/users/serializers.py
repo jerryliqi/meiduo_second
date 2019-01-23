@@ -7,6 +7,13 @@ from rest_framework_jwt.settings import api_settings
 from .models import User
 
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    """用户详细信息序列化"""
+    class Meta:
+        model = User
+        fields = ["id", "username", "mobile", "email", "email_active"]
+
+
 class CreateUserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(label="确认密码", write_only=True)
     sms_code = serializers.CharField(label="短信验证码", write_only=True)

@@ -20,6 +20,7 @@ class QQAuthorUserView(GenericAPIView):
     serializer_class = "序列化器"
 
     def get(self, request):
+        """完成oauth2.0认证"""
         # 提取code请求参数
         code = request.query_params.get("code")
         if not code:
@@ -113,7 +114,8 @@ class QQAuthorURLView(APIView):
         oauthqq = OAuthQQ(
             client_id=settings.QQ_CLIENT_ID,
             client_secret=settings.QQ_CLIENT_SECRET,
-            redirect_uri=settings.QQ_REDIRECT_URI
+            redirect_uri=settings.QQ_REDIRECT_URI,
+            state=next
         )
 
         # 调用SDK中的方法获取到拼接好的扫码url

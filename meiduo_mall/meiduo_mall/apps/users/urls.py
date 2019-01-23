@@ -13,4 +13,6 @@ urlpatterns = [
     url(r'^users/$', views.UserView.as_view()),
     # jwt登录
     url(r'^authorizations/$', obtain_jwt_token),
+    # 用户详情
+    url(r'^user/$', views.UserDetailView.as_view()),
 ]
