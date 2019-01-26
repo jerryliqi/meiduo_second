@@ -12,8 +12,6 @@ from .utils import generate_save_user_token
 from .serializers import QQAuthUserSerializer
 
 
-
-
 # '/oauth/qq/user/?code='
 class QQAuthorUserView(GenericAPIView):
 

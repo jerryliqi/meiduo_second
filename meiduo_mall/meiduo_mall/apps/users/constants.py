@@ -1,0 +1,3 @@
+
+
+VERIFY_EMAIL_TOKEN_EXPIRES = 600  # 验证码的有效期(秒)
