@@ -26,5 +26,7 @@ urlpatterns = [
     url(r'^', include('users.urls')),
     # QQ登录模块总路由
     url(r'^oauth/', include('oauth.urls')),
+    # 省市区总路由
+    url(r'^', include('areas.urls')),
 
 ]

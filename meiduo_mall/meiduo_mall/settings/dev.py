@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     # QQ登录模块
     'oauth.apps.OauthConfig',
+    # 收货地址模块
+    'areas.apps.AreasConfig',
 ]
 
 MIDDLEWARE = [
