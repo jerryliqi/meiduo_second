@@ -4,9 +4,83 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIVie
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.mixins import UpdateModelMixin, CreateModelMixin
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.decorators import action
 
-from .models import User
-from .serializers import CreateUserSerializer, UserDetailSerializer, EmailSerializer
+from .models import User, Address
+from .serializers import CreateUserSerializer, UserDetailSerializer, EmailSerializer, UserAddressSerializer, AddressTitleSerializer
+from . import constants
+
+
+class AddressViewSet(CreateModelMixin, UpdateModelMixin, GenericViewSet):
+    """用户地址新增与修改"""
+
+    serializer_class = UserAddressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request.user.addresses.filter(is_deleted=False)
+
+    # GET /addresses/
+    def list(self, request, *args, **kwargs):
+        """用户地址列表数据"""
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        user = self.request.user
+        return Response({
+            'user_id': user.id,
+            'default_address_id': user.default_address_id,
+            'limit': constants.USER_ADDRESS_COUNTS_LIMIT,
+            'addresses': serializer.data,
+        })
+
+    # POST /addresses/
+    def create(self, request, *args, **kwargs):
+        """保存用户地址数据"""
+        # 检查用户地址数据数目不能超过上限
+        count = Address.objects.filter(user_id=request.user.id).count()
+        if count >= constants.USER_ADDRESS_COUNTS_LIMIT:
+            return Response({"message": "保存地址数据已达到上限"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return super().create(request, *args, **kwargs)
+
+    # delete /addresses/<pk>/
+    def destroy(self, request, *args, **kwargs):
+        """删除地址"""
+        address = self.get_object()
+
+        # 进行逻辑删除
+        address.is_deleted = True
+        address.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # PUT /addresses/pk/status/
+    # 新增行为,需要加装饰器,不然路由不能识别
+    @action(methods=["PUT"], detail=True)
+    def status(self, request, pk=None):
+        """设置默认地址"""
+        # 获取地址
+        address = self.get_object()
+        # 将默认地址修改为从前端获取的
+        request.user.default_address = address
+        # 保存
+        address.save()
+        return Response({"message": "ok"})
+
+    # put /addresses/pk/title/
+    # 需要请求体参数 title
+    @action(methods=["put"], detail=True)
+    def title(self, request, pk=None):
+        """修改标题"""
+        address = self.get_object()
+        # 通过获取的地址修改序列化器字段
+        serializer = AddressTitleSerializer(instance=address, data=request.data)
+        # 设定自动抛出异常
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class VerifyEmailView(APIView):
