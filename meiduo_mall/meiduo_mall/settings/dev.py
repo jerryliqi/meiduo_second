@@ -272,3 +272,12 @@ EMAIL_HOST_USER = 'liqijerryliqi@163.com'
 EMAIL_HOST_PASSWORD = 'liqi1993'
 # 收件⼈看到的发件⼈
 EMAIL_FROM = 'python<liqijerryliqi@163.com>'
+
+
+# DRF扩展
+REST_FRAMEWORK_EXTENSIONS = {
+    # 缓存时间
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60,
+    # 缓存存储
+    'DEFAULT_USE_CACHE': 'default',
+}
