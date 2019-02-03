@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'oauth.apps.OauthConfig',
     # 收货地址模块
     'areas.apps.AreasConfig',
+    # 商品模块
+    'goods.apps.GoodsConfig',
 ]
 
 MIDDLEWARE = [
